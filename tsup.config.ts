@@ -12,4 +12,28 @@ export default defineConfig({
   target: "es2022",
   splitting: false,
   outDir: "dist",
+  esbuildPlugins: [
+    {
+      name: "text-loader",
+      setup(build) {
+        build.onLoad({ filter: /\.scss$/ }, async (args) => {
+          const fs = await import("fs");
+          const text = await fs.promises.readFile(args.path, "utf8");
+          return {
+            contents: text,
+            loader: "text",
+          };
+        });
+
+        build.onLoad({ filter: /\.inline\.ts$/ }, async (args) => {
+          const fs = await import("fs");
+          const text = await fs.promises.readFile(args.path, "utf8");
+          return {
+            contents: text,
+            loader: "text",
+          };
+        });
+      },
+    },
+  ],
 });
