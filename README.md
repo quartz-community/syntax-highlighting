@@ -10,30 +10,39 @@ npx quartz plugin add github:quartz-community/syntax-highlighting
 
 ## Usage
 
-```ts
-// quartz.config.ts
-import * as ExternalPlugin from "./.quartz/plugins"
+```yaml title="quartz.config.yaml"
+plugins:
+  - source: github:quartz-community/syntax-highlighting
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+```
 
-const config: QuartzConfig = {
-  plugins: {
-    transformers: [
-      ExternalPlugin.SyntaxHighlighting(),
-    ],
-  },
-}
+For advanced use cases, you can override in TypeScript:
+
+```ts title="quartz.ts (override)"
+import * as ExternalPlugin from "./.quartz/plugins";
+
+ExternalPlugin.SyntaxHighlighting({
+  theme: { light: "github-light", dark: "github-dark" },
+  keepBackground: false,
+});
 ```
 
 ## Configuration
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| theme | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The theme to use for syntax highlighting. |
-| keepBackground | `boolean` | `false` | Whether to keep the background color of the code block. |
-| clipboard | `boolean` | `true` | Whether to add a clipboard copy button to code blocks. |
+| Option           | Type                                    | Default                                          | Description                                             |
+| ---------------- | --------------------------------------- | ------------------------------------------------ | ------------------------------------------------------- |
+| `theme`          | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The theme to use for syntax highlighting.               |
+| `keepBackground` | `boolean`                               | `false`                                          | Whether to keep the background color of the code block. |
+| `clipboard`      | `boolean`                               | `true`                                           | Whether to add a clipboard copy button to code blocks.  |
 
 ## Documentation
 
-See the [Quartz documentation](https://quartz.jzhao.xyz/) for more information.
+See the [Quartz documentation](https://quartz.jzhao.xyz/plugins/SyntaxHighlighting) for more information.
 
 ## License
 
