@@ -1,7 +1,7 @@
 import rehypePrettyCode from "rehype-pretty-code";
 import type { Options as CodeOptions, Theme as CodeTheme } from "rehype-pretty-code";
 import type { QuartzTransformerPlugin, JSResource, CSSResource } from "@quartz-community/types";
-// @ts-ignore
+// @ts-expect-error - inline script import handled by Quartz bundler
 import clipboardScript from "./scripts/clipboard.inline";
 import clipboardStyle from "./styles/clipboard.scss";
 
