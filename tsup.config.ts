@@ -55,5 +55,6 @@ export default defineConfig({
   target: "es2022",
   splitting: false,
   outDir: "dist",
+  platform: "node",
   esbuildPlugins: [inlineScriptPlugin],
 });
