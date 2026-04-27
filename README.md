@@ -34,11 +34,12 @@ ExternalPlugin.SyntaxHighlighting({
 
 ## Configuration
 
-| Option           | Type                                    | Default                                          | Description                                             |
-| ---------------- | --------------------------------------- | ------------------------------------------------ | ------------------------------------------------------- |
-| `theme`          | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The theme to use for syntax highlighting.               |
-| `keepBackground` | `boolean`                               | `false`                                          | Whether to keep the background color of the code block. |
-| `clipboard`      | `boolean`                               | `true`                                           | Whether to add a clipboard copy button to code blocks.  |
+| Option                | Type                                    | Default                                          | Description                                                                                                                            |
+| --------------------- | --------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `theme`               | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The theme to use for syntax highlighting.                                                                                              |
+| `keepBackground`      | `boolean`                               | `false`                                          | Whether to keep the background color of the code block.                                                                                |
+| `clipboard`           | `boolean`                               | `true`                                           | Whether to add a clipboard copy button to code blocks.                                                                                 |
+| `tokenClassification` | `boolean`                               | `true`                                           | Adds `data-token-type` attributes (keyword, string, comment, etc.) to token spans. Enables theme-aware code styling via CSS selectors. |
 
 ## Documentation
 
