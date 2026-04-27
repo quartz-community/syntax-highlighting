@@ -19,8 +19,9 @@ declare const SyntaxHighlighting: QuartzTransformerPlugin<Partial<SyntaxHighligh
  * Shiki transformer that adds `data-token-type` attributes to token spans
  * based on TextMate scope classification.
  *
- * Requires `includeExplanation: "scopeName"` on the Shiki options to have
- * access to scope data. When scopes are unavailable, tokens are left untouched.
+ * Automatically enables `includeExplanation: "scopeName"` via the `preprocess`
+ * hook so that scope data is available regardless of how the host plugin
+ * (e.g. rehype-pretty-code) invokes shiki.
  *
  * This is purely additive — inline styles are preserved as-is. Downstream
  * consumers (e.g. Quartz Themes) can target `span[data-token-type="keyword"]`

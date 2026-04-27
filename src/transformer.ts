@@ -37,7 +37,6 @@ export const SyntaxHighlighting: QuartzTransformerPlugin<Partial<SyntaxHighlight
   const rehypeOpts: CodeOptions = { ...(codeOpts as CodeOptions) };
 
   if (tokenClassification) {
-    (rehypeOpts as Record<string, unknown>).includeExplanation = "scopeName";
     rehypeOpts.transformers = [...(rehypeOpts.transformers ?? []), tokenClassifierTransformer()];
   }
 

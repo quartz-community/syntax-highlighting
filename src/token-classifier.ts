@@ -1,4 +1,4 @@
-import type { ShikiTransformer, ThemedToken } from "shiki";
+import type { CodeToHastOptions, ShikiTransformer, ThemedToken } from "shiki";
 
 const SCOPE_TO_TOKEN: [prefix: string, tokenType: string][] = [
   // Invalid / error scopes
@@ -142,8 +142,9 @@ function classifyToken(token: ThemedToken): string | undefined {
  * Shiki transformer that adds `data-token-type` attributes to token spans
  * based on TextMate scope classification.
  *
- * Requires `includeExplanation: "scopeName"` on the Shiki options to have
- * access to scope data. When scopes are unavailable, tokens are left untouched.
+ * Automatically enables `includeExplanation: "scopeName"` via the `preprocess`
+ * hook so that scope data is available regardless of how the host plugin
+ * (e.g. rehype-pretty-code) invokes shiki.
  *
  * This is purely additive — inline styles are preserved as-is. Downstream
  * consumers (e.g. Quartz Themes) can target `span[data-token-type="keyword"]`
@@ -152,6 +153,11 @@ function classifyToken(token: ThemedToken): string | undefined {
 export function tokenClassifierTransformer(): ShikiTransformer {
   return {
     name: "token-classifier",
+    preprocess(_code, options) {
+      // Inject includeExplanation at runtime so scope data is populated on
+      // tokens, even when the calling plugin doesn't expose this option.
+      (options as CodeToHastOptions).includeExplanation = "scopeName";
+    },
     span(_hast, _line, _col, _lineElement, token) {
       const tokenType = classifyToken(token);
       if (tokenType) {
