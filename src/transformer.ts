@@ -1,6 +1,7 @@
 import rehypePrettyCode from "rehype-pretty-code";
 import type { Options as CodeOptions, Theme as CodeTheme } from "rehype-pretty-code";
 import type { QuartzTransformerPlugin, JSResource, CSSResource } from "@quartz-community/types";
+import { tokenClassifierTransformer } from "./token-classifier";
 // @ts-expect-error - inline script import handled by Quartz bundler
 import clipboardScript from "./scripts/clipboard.inline";
 import clipboardStyle from "./styles/clipboard.scss";
@@ -14,6 +15,7 @@ export interface SyntaxHighlightingOptions {
   theme?: Theme;
   keepBackground?: boolean;
   clipboard?: boolean;
+  tokenClassification?: boolean;
 }
 
 const defaultOptions: SyntaxHighlightingOptions = {
@@ -23,17 +25,26 @@ const defaultOptions: SyntaxHighlightingOptions = {
   },
   keepBackground: false,
   clipboard: true,
+  tokenClassification: true,
 };
 
 export const SyntaxHighlighting: QuartzTransformerPlugin<Partial<SyntaxHighlightingOptions>> = (
   userOpts,
 ) => {
   const opts = { ...defaultOptions, ...userOpts };
-  const { clipboard, ...codeOpts } = opts;
+  const { clipboard, tokenClassification, ...codeOpts } = opts;
+
+  const rehypeOpts: CodeOptions = { ...(codeOpts as CodeOptions) };
+
+  if (tokenClassification) {
+    (rehypeOpts as Record<string, unknown>).includeExplanation = "scopeName";
+    rehypeOpts.transformers = [...(rehypeOpts.transformers ?? []), tokenClassifierTransformer()];
+  }
+
   return {
     name: "SyntaxHighlighting",
     htmlPlugins() {
-      return [[rehypePrettyCode, codeOpts as CodeOptions]];
+      return [[rehypePrettyCode, rehypeOpts]];
     },
     externalResources() {
       const js: JSResource[] = [];
