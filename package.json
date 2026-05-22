@@ -96,7 +96,22 @@
         "dark": "github-dark"
       },
       "keepBackground": false,
+      "clipboard": true,
       "tokenClassification": true
+    },
+    "optionSchema": {
+      "theme": {
+        "type": "object"
+      },
+      "keepBackground": {
+        "type": "boolean"
+      },
+      "clipboard": {
+        "type": "boolean"
+      },
+      "tokenClassification": {
+        "type": "boolean"
+      }
     }
   }
 }
