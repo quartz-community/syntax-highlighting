@@ -1,3 +1,17 @@
+## 1.0.1
+
+### Patch Changes
+
+- Add `shiki` to devDependencies so the package can be built from source.
+
+  `shiki` was declared only as a required peer dependency. Quartz sets
+  `legacy-peer-deps=true` in its root `.npmrc`, which npm inherits when the plugin loader
+  runs `npm install` inside `.quartz/plugins/`. Peers are then not auto-installed, so
+  building this plugin from a `github:` source failed with `Could not resolve "shiki"`.
+
+  Declaring it as a devDependency guarantees build-time availability. It is pruned by the
+  loader afterwards via `npm prune --omit=dev`, and remains a peer for consumers.
+
 # Changelog
 
 ## 1.0.0
