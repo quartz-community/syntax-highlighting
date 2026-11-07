@@ -112,6 +112,13 @@
       "tokenClassification": {
         "type": "boolean"
       }
+    },
+    "capabilities": {
+      "provides": {
+        "dom": [
+          ".clipboard-button"
+        ]
+      }
     }
   },
   "publishConfig": {
