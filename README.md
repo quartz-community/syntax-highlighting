@@ -1,24 +1,27 @@
 # @quartz-community/syntax-highlighting
 
-Adds syntax highlighting to code blocks using rehype-pretty-code, with an optional clipboard copy button.
+Adds syntax highlighting to code blocks using [rehype-pretty-code](https://rehype-pretty.pages.dev/) and [Shiki](https://shiki.style/), with an optional clipboard copy button.
 
 ## Installation
 
 ```bash
-npx quartz plugin add github:quartz-community/syntax-highlighting
+npx quartz plugin add @quartz-community/syntax-highlighting
 ```
+
+Syntax highlighting is already in Quartz's default configuration.
 
 ## Usage
 
 ```yaml title="quartz.config.yaml"
 plugins:
-  - source: github:quartz-community/syntax-highlighting
+  - source: "@quartz-community/syntax-highlighting"
     enabled: true
     options:
       theme:
         light: github-light
         dark: github-dark
       keepBackground: false
+    order: 20
 ```
 
 For advanced use cases, you can override in TypeScript:
@@ -36,7 +39,7 @@ ExternalPlugin.SyntaxHighlighting({
 
 | Option                | Type                                    | Default                                          | Description                                                                                                                            |
 | --------------------- | --------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `theme`               | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The theme to use for syntax highlighting.                                                                                              |
+| `theme`               | `{ light: CodeTheme, dark: CodeTheme }` | `{ light: "github-light", dark: "github-dark" }` | The Shiki themes to use in light and dark mode.                                                                                        |
 | `keepBackground`      | `boolean`                               | `false`                                          | Whether to keep the background color of the code block.                                                                                |
 | `clipboard`           | `boolean`                               | `true`                                           | Whether to add a clipboard copy button to code blocks.                                                                                 |
 | `tokenClassification` | `boolean`                               | `true`                                           | Adds `data-token-type` attributes (keyword, string, comment, etc.) to token spans. Enables theme-aware code styling via CSS selectors. |
