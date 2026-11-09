@@ -1,6 +1,6 @@
 {
   "name": "@quartz-community/syntax-highlighting",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Syntax highlighting transformer plugin for Quartz",
   "type": "module",
   "license": "MIT",
