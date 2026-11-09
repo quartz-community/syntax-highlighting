@@ -69,6 +69,10 @@ export default defineConfig({
   splitting: false,
   noExternal: [/.*/],
   external: SINGLETON_EXTERNALS,
+  // tsup checks noExternal before external, so `noExternal: [/.*/]` bundled these too
+  esbuildOptions(options) {
+    options.external = SINGLETON_EXTERNALS;
+  },
   outDir: "dist",
   platform: "node",
   esbuildPlugins: [inlineScriptPlugin],
