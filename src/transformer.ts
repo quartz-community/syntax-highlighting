@@ -57,7 +57,9 @@ export const SyntaxHighlighting: QuartzTransformerPlugin<Partial<SyntaxHighlight
         });
 
         css.push({
-          content: clipboardStyle,
+          // In Quartz's base layer, so themes (e.g. @quartz-themes/core's `obsidian` layer)
+          // can restyle the button.
+          content: `@layer quartz-base {\n${clipboardStyle}\n}`,
           inline: true,
         });
       }
