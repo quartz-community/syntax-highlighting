@@ -8,6 +8,9 @@ const setupClipboard = () => {
   for (let i = 0; i < els.length; i++) {
     const el = els[i];
     if (!el) continue;
+    // `render` (e.g. encrypted-pages after an unlock) runs this again on the same page: leave
+    // blocks that already have their button alone instead of adding a second one.
+    if (el.querySelector(":scope > .clipboard-button")) continue;
     const codeBlock = el.getElementsByTagName("code")[0];
     if (codeBlock) {
       const source = (
