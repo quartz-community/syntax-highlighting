@@ -14,7 +14,7 @@ interface FakeButton extends EventTarget {
 
 /** A page whose `<pre>` blocks hold one `<code>` each (rehype-pretty-code's output). */
 function page(blocks: ({ text: string; clipboard?: string } | null)[]) {
-  const pres = blocks.map((block) => {
+  const makePre = (block: { text: string; clipboard?: string } | null) => {
     const buttons: FakeButton[] = [];
     const code = block && {
       innerText: block.text,
@@ -24,8 +24,13 @@ function page(blocks: ({ text: string; clipboard?: string } | null)[]) {
       buttons,
       getElementsByTagName: (tag: string) => (tag === "code" && code ? [code] : []),
       prepend: (el: FakeButton) => buttons.unshift(el),
+      querySelector: (selector: string) =>
+        selector === ":scope > .clipboard-button"
+          ? (buttons.find((b) => b.className === "clipboard-button") ?? null)
+          : null,
     };
-  });
+  };
+  const pres = blocks.map(makePre);
   let cleanups: (() => void)[] = [];
   const copied: string[] = [];
   const document = Object.assign(new EventTarget(), {
@@ -41,9 +46,13 @@ function page(blocks: ({ text: string; clipboard?: string } | null)[]) {
   return {
     pres,
     copied,
+    /** a code block that appears without a navigation (e.g. decrypted content) */
+    addBlock: (block: { text: string }) => pres.push(makePre(block)),
+    /** an SPA navigation: cleanups, the new page's fresh `<pre>` blocks, then `nav` */
     nav: () => {
       cleanups.forEach((fn) => fn());
       cleanups = [];
+      pres.forEach((pre) => (pre.buttons.length = 0));
       document.dispatchEvent(new CustomEvent("nav"));
     },
     render: () => document.dispatchEvent(new CustomEvent("render")),
@@ -116,15 +125,34 @@ describe("clipboard script", () => {
     expect(p.copied).toEqual([]);
   });
 
-  // bug: setup runs on `render` too and prepends another button to every code block that already
-  // has one. encrypted-pages dispatches `render` after an unlock and, once a password is cached,
-  // after patching the content index on every navigation: each code block then shows two (or
-  // more) copy buttons.
-  it.fails("doesn't add a second button on a `render` event", () => {
+  // regression: setup runs on `render` too (encrypted-pages dispatches it after an unlock) and used
+  // to prepend another button to every code block that already had one.
+  it("doesn't add a second button on a `render` event", () => {
     const p = page([{ text: "x" }]);
     runInline(script);
     p.nav();
     p.render();
     expect(p.pres[0]!.buttons).toHaveLength(1);
+  });
+
+  it("keeps one working button per block after a nav and two `render`s", async () => {
+    const p = page([{ text: "a" }, null, { text: "b" }]);
+    runInline(script);
+    p.nav();
+    p.render();
+    p.render();
+    expect(p.pres.map((pre) => pre.buttons.length)).toEqual([1, 0, 1]);
+    p.pres[0]!.buttons[0]!.dispatchEvent(new Event("click"));
+    await flush();
+    expect(p.copied).toEqual(["a"]);
+  });
+
+  it("adds buttons to code blocks that a `render` revealed (decrypted content)", () => {
+    const p = page([{ text: "a" }]);
+    runInline(script);
+    p.nav();
+    p.addBlock({ text: "new" });
+    p.render();
+    expect(p.pres.map((pre) => pre.buttons.length)).toEqual([1, 1]);
   });
 });
